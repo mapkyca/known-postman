@@ -1,0 +1,12 @@
+{
+    "name": "mapkyca/known-postman",
+    "version": "1.0.0",
+    "description": "Postman collection demonstrating the Known API",
+    "authors": [
+        {
+            "name": "Marcus Povey",
+            "email": "marcus@marcus-povey.co.uk"
+        }
+    ],
+    "require": {}
+}

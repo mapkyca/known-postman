@@ -1,0 +1,841 @@
+{
+	"info": {
+		"_postman_id": "44b37eb9-b6bd-4d1e-a73d-4e8068ca444b",
+		"name": "Known",
+		"description": "A collection demonstrating making common API calls to the Known API.\n\n# Authorisation\n\nThis uses the OAuth2 server which is built in to the Known API. \n\nTo make full advantage of this, be sure to ask for `openid profile email` as scopes.\n\n# Variables\n\nThere are a number of variables used throughout this collection which can be set in your environment variables.\n\n* `site_url` - the base url of your install (e.g. http://localhost:8088/ if you're using the development docker build)\n* `object_id` - Used in the various Edit examples, set automatically by the previous create example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Status Post",
+			"item": [
+				{
+					"name": "Get Edit form and syndication options",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "You want to tell Known that you want JSON",
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{site_url}}status/edit/",
+							"host": [
+								"{{site_url}}status"
+							],
+							"path": [
+								"edit",
+								""
+							]
+						},
+						"description": "Retrieve the post type edit form, which will return form fields (if you're constructing the form on the fly in your client), as well as syndication options available."
+					},
+					"response": []
+				},
+				{
+					"name": "Make a Status post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "362fff43-f762-44b1-b9dc-b3cc9cc66f61",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure creation of post - get ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.location).to.not.be.undefined;",
+									"",
+									"    pm.sendRequest(jsonData.location, function (err, response) {",
+									"        var json = response.json();",
+									"",
+									"        console.log(json);",
+									"",
+									"        // Set an environment variable so we can use it in future queries",
+									"        pm.environment.set('object_id', json.object.id);",
+									"    });",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "body",
+									"value": "EXAMPLE POST",
+									"description": "The content of your status post",
+									"type": "text"
+								},
+								{
+									"key": "inreplyto[]",
+									"value": "",
+									"description": "Optional array of urls to webmention",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"description": "Optional tags",
+									"type": "text"
+								},
+								{
+									"key": "access",
+									"value": "",
+									"description": "Access level of post (defaults to PUBLIC)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}status/edit/",
+							"host": [
+								"{{site_url}}status"
+							],
+							"path": [
+								"edit",
+								""
+							]
+						},
+						"description": "This is an example of how you can make a status post using the API"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a Status post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "693622f9-86c2-4237-a3ee-8b776ba7d51c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure creation of post - get ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.location).to.not.be.undefined;",
+									"",
+									"    pm.sendRequest(jsonData.location, function (err, response) {",
+									"        var json = response.json();",
+									"",
+									"        console.log(json);",
+									"",
+									"        // Set an environment variable so we can use it in future queries",
+									"        pm.environment.set('object_id', json.object.id);",
+									"    });",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "body",
+									"value": "EXAMPLE POST updated!",
+									"description": "The content of your status post",
+									"type": "text"
+								},
+								{
+									"key": "inreplyto[]",
+									"value": "",
+									"description": "Optional array of urls to webmention",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"description": "Optional tags",
+									"type": "text"
+								},
+								{
+									"key": "access",
+									"value": "",
+									"description": "Access level of post (defaults to PUBLIC)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}status/edit/{{object_id}}",
+							"host": [
+								"{{site_url}}status"
+							],
+							"path": [
+								"edit",
+								"{{object_id}}"
+							]
+						},
+						"description": "This is an example of how you can update a status post using the API"
+					},
+					"response": []
+				}
+			],
+			"description": "API requests around the status plugin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1046f747-1b4e-4a2b-a279-5e124308777c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "10784995-c7de-4ace-b34d-c4969f2ef30d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Blog Post",
+			"item": [
+				{
+					"name": "Get Edit form and syndication options",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "You want to tell Known that you want JSON",
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{site_url}}entry/edit/",
+							"host": [
+								"{{site_url}}entry"
+							],
+							"path": [
+								"edit",
+								""
+							]
+						},
+						"description": "Retrieve the post type edit form, which will return form fields (if you're constructing the form on the fly in your client), as well as syndication options available."
+					},
+					"response": []
+				},
+				{
+					"name": "Make a blog post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "29da1d03-0069-4b79-8ec4-f1e82d6c121c",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure creation of post - get ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.location).to.not.be.undefined;",
+									"",
+									"    pm.sendRequest(jsonData.location, function (err, response) {",
+									"        var json = response.json();",
+									"",
+									"        console.log(json);",
+									"",
+									"        // Set an environment variable so we can use it in future queries",
+									"        pm.environment.set('object_id', json.object.id);",
+									"    });",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Blog post title",
+									"description": "The title of the blog post",
+									"type": "text"
+								},
+								{
+									"key": "subtitle",
+									"value": "",
+									"description": "Optional subtitle",
+									"type": "text"
+								},
+								{
+									"key": "body",
+									"value": "EXAMPLE Blog",
+									"description": "The content of your status post",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"description": "Optional tags",
+									"type": "text"
+								},
+								{
+									"key": "access",
+									"value": "",
+									"description": "Access level of post (defaults to PUBLIC)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}status/edit/",
+							"host": [
+								"{{site_url}}status"
+							],
+							"path": [
+								"edit",
+								""
+							]
+						},
+						"description": "This is an example of how you can make a blog post using the API"
+					},
+					"response": []
+				},
+				{
+					"name": "Edit a blog post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a0cf777d-c5a0-4a35-af1f-3367de16cd73",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure creation of post - get ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.location).to.not.be.undefined;",
+									"",
+									"    pm.sendRequest(jsonData.location, function (err, response) {",
+									"        var json = response.json();",
+									"",
+									"        console.log(json);",
+									"",
+									"        // Set an environment variable so we can use it in future queries",
+									"        pm.environment.set('object_id', json.object.id);",
+									"    });",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Blog post title",
+									"description": "The title of the blog post",
+									"type": "text"
+								},
+								{
+									"key": "subtitle",
+									"value": "",
+									"description": "Optional subtitle",
+									"type": "text"
+								},
+								{
+									"key": "body",
+									"value": "EXAMPLE Blog (edited)",
+									"description": "The content of your status post",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"description": "Optional tags",
+									"type": "text"
+								},
+								{
+									"key": "access",
+									"value": "",
+									"description": "Access level of post (defaults to PUBLIC)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}status/edit/{{object_id}}",
+							"host": [
+								"{{site_url}}status"
+							],
+							"path": [
+								"edit",
+								"{{object_id}}"
+							]
+						},
+						"description": "This is an example of how you can edit a blog post using the API"
+					},
+					"response": []
+				}
+			],
+			"description": "API requests around the blog post plugin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7c655128-8964-47d1-90ee-28b1f8b2951c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b7f71998-bb59-4435-b55f-d30af114b346",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Photo Post",
+			"item": [
+				{
+					"name": "Get Edit form and syndication options",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "You want to tell Known that you want JSON",
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{site_url}}photo/edit/",
+							"host": [
+								"{{site_url}}photo"
+							],
+							"path": [
+								"edit",
+								""
+							]
+						},
+						"description": "Retrieve the post type edit form, which will return form fields (if you're constructing the form on the fly in your client), as well as syndication options available."
+					},
+					"response": []
+				},
+				{
+					"name": "Make a photo post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "496010c8-291c-461a-9557-bd626c68f0a2",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure creation of post - get ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.location).to.not.be.undefined;",
+									"",
+									"    pm.sendRequest(jsonData.location, function (err, response) {",
+									"        var json = response.json();",
+									"",
+									"        console.log(json);",
+									"",
+									"        // Set an environment variable so we can use it in future queries",
+									"        pm.environment.set('object_id', json.object.id);",
+									"    });",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Blog post title",
+									"description": "The title of the blog post",
+									"type": "text"
+								},
+								{
+									"key": "body",
+									"value": "EXAMPLE Photo post",
+									"description": "The content of your status post",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"description": "Optional tags",
+									"type": "text"
+								},
+								{
+									"key": "access",
+									"value": "",
+									"description": "Access level of post (defaults to PUBLIC)",
+									"type": "text"
+								},
+								{
+									"key": "photo[]",
+									"description": "One or more photos",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}photo/edit/",
+							"host": [
+								"{{site_url}}photo"
+							],
+							"path": [
+								"edit",
+								""
+							]
+						},
+						"description": "This is an example of how you can make a photo post using the API"
+					},
+					"response": []
+				},
+				{
+					"name": "Update a photo post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "39cb6537-9fe7-46e4-8e08-84b10732ff88",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure creation of post - get ID\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.location).to.not.be.undefined;",
+									"",
+									"    pm.sendRequest(jsonData.location, function (err, response) {",
+									"        var json = response.json();",
+									"",
+									"        console.log(json);",
+									"",
+									"        // Set an environment variable so we can use it in future queries",
+									"        pm.environment.set('object_id', json.object.id);",
+									"    });",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Blog post title",
+									"description": "The title of the blog post",
+									"type": "text"
+								},
+								{
+									"key": "body",
+									"value": "EXAMPLE Photo post",
+									"description": "The content of your status post",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"description": "Optional tags",
+									"type": "text"
+								},
+								{
+									"key": "access",
+									"value": "",
+									"description": "Access level of post (defaults to PUBLIC)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}photo/edit/{{object_id}}",
+							"host": [
+								"{{site_url}}photo"
+							],
+							"path": [
+								"edit",
+								"{{object_id}}"
+							]
+						},
+						"description": "This is an example of how you can make a photo post using the API"
+					},
+					"response": []
+				}
+			],
+			"description": "API requests around the photo post plugin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a7e7e329-53a0-4ec3-89e4-5864a75c77f3",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "adcaa625-7e05-4193-b29b-74d62b708a95",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Retrieve homepage feed and available Post types on the site",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": "You want to tell Known that you want JSON",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{site_url}}",
+					"host": [
+						"{{site_url}}"
+					]
+				},
+				"description": "Retrieve the main homepage feed. \n\nPost types available to your feed are available in the `contentTypes` array."
+			},
+			"response": []
+		},
+		{
+			"name": "My user details",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"description": "You want to tell Known that you want JSON",
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{site_url}}currentUser/",
+					"host": [
+						"{{site_url}}currentUser"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Who am I logged in as?"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessToken",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "tokenType",
+				"type": "any"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "32fe51c9-b6d4-4b3d-b8cf-2ab282e92569",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3c3e568f-afab-4cd5-adc5-c26bac5d41d1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
