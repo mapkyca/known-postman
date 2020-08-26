@@ -8,7 +8,7 @@ This uses the OAuth2 server which is built in to the Known API.
 
 To make full advantage of this, be sure to ask for `openid profile email` as scopes.
 
-## Usage
+## Usage
 
 * Download Postman
 * Download Docker
