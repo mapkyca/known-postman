@@ -739,6 +739,130 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "HTTP Auth",
+			"item": [
+				{
+					"name": "Log on",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4b4087dd-a3fe-47db-be2c-9cbd967f42ff",
+								"exec": [
+									"",
+									"/**",
+									" * To avoid a chicken and egg, we must first \"log in\", so we need to get the CSRF tokens for this request",
+									" */",
+									"pm.sendRequest({",
+									"    url: pm.environment.get(\"site_url\") + \"session/login\",",
+									"    header: {",
+									"        'content-type': 'application/json',",
+									"        'accept': 'application/json'",
+									"    },",
+									"}, function (err, response) {",
+									"    var json = response.json();",
+									"",
+									"    console.log(json);",
+									"",
+									"    pm.environment.set('__bTk', json.csrf[0].token);",
+									"    pm.environment.set('__bTs', json.csrf[0].time);",
+									"    pm.environment.set('__bTa', json.csrf[0].action);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d7fb1e50-c8ef-4103-ab7b-4ac6b11476ca",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Retrieve the user's HTTP API token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData['api-token']).to.not.be.undefined;",
+									"",
+									"    pm.environment.set('api_token', jsonData['api-token']);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "{{username}}",
+									"description": "Your username",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"description": "Your user's password",
+									"type": "text"
+								},
+								{
+									"key": "__bTk",
+									"value": "{{__bTk}}",
+									"type": "text"
+								},
+								{
+									"key": "__bTs",
+									"value": "{{__bTs}}",
+									"type": "text"
+								},
+								{
+									"key": "__bTa",
+									"value": "{{__bTa}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site_url}}session/login",
+							"host": [
+								"{{site_url}}session"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "Log a user on, and demonstrate how to retrieve the user's auth code on success.\n\nThis only works over HTTPS."
+					},
+					"response": []
+				}
+			],
+			"description": "Demonstrate how to get the HTTP auth code for a user.\n\nThis is the native Known auth mechanism, and while still useful in some instances, it is generally recommended that you use OAuth2 where possible.",
+			"auth": {
+				"type": "noauth"
+			},
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Retrieve homepage feed and available Post types on the site",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
