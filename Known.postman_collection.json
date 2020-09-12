@@ -806,8 +806,8 @@
 						"header": [
 							{
 								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"value": "application/json"
 							}
 						],
 						"body": {
@@ -851,7 +851,7 @@
 								"login"
 							]
 						},
-						"description": "Log a user on, and demonstrate how to retrieve the user's auth code on success.\n\nThis only works over HTTPS."
+						"description": "Log a user on, and demonstrate how to retrieve the user's auth code on success.\n\nThis only works over HTTPS.\n\nTo a large extent, this can be considered DEPRECATED, and instead you should an OAUTH2 password grant"
 					},
 					"response": []
 				}
